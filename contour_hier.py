@@ -1,14 +1,29 @@
 import cv2 as cv
 import numpy as np
 
-img = cv.imread('inputs/original.png', cv.IMREAD_UNCHANGED)
-gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-edged = cv.Canny(gray, 127, 250)
+# Blank Image
+img = np.zeros((500,500,3), dtype='uint8')
 
+# Drawing the outer box
+rect_img = cv.rectangle(img, (125,125),(325, 325), (255,0,0), -1)
+
+# Drawing the inner box
+rect_img = cv.rectangle(rect_img, (200,200),(300, 300), (0,255,0), -1)
+
+gray = cv.cvtColor(rect_img, cv.COLOR_RGB2GRAY)
+edged = cv.Canny(gray, 127, 255)
+
+# Finding the contours
 contours, hier = cv.findContours(edged, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+print('Contours Found {0}'.format(len(contours)))
 
-print(hier)
+for comp in zip(contours, hier):
+    print(comp[0])
+    print(comp[1])
 
-# cv.imshow('Edged Image', edged)
-# cv.waitKey(0)
-# cv.destroyAllWindows()
+output = cv.drawContours(rect_img, contours, -1, (0,0,255))
+
+cv.imshow('Image', rect_img)
+cv.imshow('Contours', output)
+cv.waitKey(0)
+cv.destroyAllWindows()

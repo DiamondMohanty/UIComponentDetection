@@ -3,7 +3,7 @@ import numpy as np
 
 
 # reading image
-img = cv.imread('inputs/original.png', cv.IMREAD_UNCHANGED)
+img = cv.imread('inputs/image3.jpeg') #cv.IMREAD_UNCHANGED
 
 # Gray Scale
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -25,17 +25,22 @@ blank_tmp = cv.drawContours(blank_tmp, contours, -1, (0,0,255))
 
 
 output = img
+idx = 0
 for cnt in contours:
     # Calculate Contour Size
     x,y,w,h = cv.boundingRect(cnt)
-    if h > 15 and w > 20:
+    if h > 15 and w > 15:
         output = cv.rectangle(output, (x,y), (x+w, y+h), (255,0,0))        
         blank = cv.rectangle(blank, (x,y), (x+w, y+h), (255,0,0))        
+        sample_img = img[y:y+h, x:x+w]
+        #cv.imwrite('outputs/img_'+str(idx)+'.png', sample_img)
+        idx +=1 
 
 # Display image
-cv.imshow('Original Image', img)
-cv.imshow('Edged Image', edged)
-cv.imshow('Annotated Image', output)
+cv.imshow('Gray Image', gray)
+#cv.imshow('Original Image', img)
+#cv.imshow('Edged Image', edged)
+#cv.imshow('Annotated Image', output)
 cv.imshow('Blank Annotated Image', blank)
 cv.imshow('Annotated Image', blank_tmp)
 cv.waitKey(0)
